@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFS Streets of Kiel</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: Arial, sans-serif;
+            user-select: none;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        #ui-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        #intro-screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            background-size: cover;
+            background-position: center;
+            pointer-events: auto;
+            transition: opacity 0.5s;
+        }
+        .nfs-font {
+            font-family: Impact, sans-serif;
+            font-style: italic;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+        #countdown {
+            font-size: 15vw;
+            color: #ffcc00;
+            position: absolute;
+            top: 30%;
+            opacity: 0;
+            transition: transform 0.2s;
+            pointer-events: none;
+            z-index: 1002;
+            text-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+        }
+        #start-btn {
+            position: relative;
+            z-index: 1001;
+            background: pointer-events: auto;
+            padding: 15px 40px;
+            font-size: 24px;
+            background: linear-gradient(45deg, #ff00de, #00ffcc);
+            border: none;
+            color: white;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+            transform: skew(-10deg);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        #start-btn:hover {
+            transform: skew(-10deg) scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.8);
+        }
+        #start-btn:active {
+            transform: skew(-10deg) scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <div id="intro-screen">
+        <button id="start-btn" class="nfs-font">START ENGINE</button>
+        <div id="countdown" class="nfs-font">3</div>
+    </div>
+    
+    <div id="ui-container">
+        <div id="hud" style="display: none;">
+            <div id="location" class="nfs-font">LOC KIEL, GERMANY<br><span style="font-size: 12px; opacity: 0.7;">DISTRICT ALTSTADT</span></div>
+            <div id="timer-box" class="nfs-font">60.00</div>
+            <div id="lives-box" class="nfs-font">CRASHES <span id="crash-count">0</span>/3</div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script>
+        const CONFIG = { totalTime: 60, maxCrashes: 3, speed: 0, baseSpeed: 1.5, maxSpeed: 3.0 };
+        let gameState = { active: false, timeLeft: CONFIG.totalTime, crashes: 0, score: 0 };
+        
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        
+        camera.position.set(0, 3, 5);
+        camera.rotation.x = -0.1;
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+        
+        document.getElementById('start-btn').addEventListener('click', function() {
+            gameState.active = true;
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('hud').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
